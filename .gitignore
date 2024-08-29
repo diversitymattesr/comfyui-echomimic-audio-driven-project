@@ -1,8 +1,8 @@
 __pycache__/
 *.py[cod]
-/output/
-/input/
-!/input/example.png
+/输出文件夹/
+/输入文件夹/
+!/输入文件夹/example.png
 /models/
 /temp/
 /custom_nodes/

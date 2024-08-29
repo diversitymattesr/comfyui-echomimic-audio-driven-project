@@ -1,7 +1,4 @@
-torch
 torchsde
-torchvision
-torchaudio
 einops
 transformers>=4.28.1
 tokenizers>=0.13.3
@@ -13,8 +10,11 @@ Pillow
 scipy
 tqdm
 psutil
+xformers==0.0.24
 
 #non essential dependencies:
 kornia>=0.7.1
 spandrel
 soundfile
+
+

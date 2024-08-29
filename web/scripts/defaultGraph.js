@@ -1,119 +1,135 @@
 export const defaultGraph = {
-	last_node_id: 9,
-	last_link_id: 9,
+	last_node_id: 7,
+	last_link_id: 7,
 	nodes: [
-		{
-			id: 7,
-			type: "CLIPTextEncode",
-			pos: [413, 389],
-			size: { 0: 425.27801513671875, 1: 180.6060791015625 },
-			flags: {},
-			order: 3,
-			mode: 0,
-			inputs: [{ name: "clip", type: "CLIP", link: 5 }],
-			outputs: [{ name: "CONDITIONING", type: "CONDITIONING", links: [6], slot_index: 0 }],
-			properties: {},
-			widgets_values: ["text, watermark"],
-		},
-		{
-			id: 6,
-			type: "CLIPTextEncode",
-			pos: [415, 186],
-			size: { 0: 422.84503173828125, 1: 164.31304931640625 },
-			flags: {},
-			order: 2,
-			mode: 0,
-			inputs: [{ name: "clip", type: "CLIP", link: 3 }],
-			outputs: [{ name: "CONDITIONING", type: "CONDITIONING", links: [4], slot_index: 0 }],
-			properties: {},
-			widgets_values: ["beautiful scenery nature glass bottle landscape, , purple galaxy bottle,"],
-		},
-		{
-			id: 5,
-			type: "EmptyLatentImage",
-			pos: [473, 609],
-			size: { 0: 315, 1: 106 },
-			flags: {},
-			order: 1,
-			mode: 0,
-			outputs: [{ name: "LATENT", type: "LATENT", links: [2], slot_index: 0 }],
-			properties: {},
-			widgets_values: [512, 512, 1],
-		},
-		{
-			id: 3,
-			type: "KSampler",
-			pos: [863, 186],
-			size: { 0: 315, 1: 262 },
-			flags: {},
-			order: 4,
-			mode: 0,
-			inputs: [
-				{ name: "model", type: "MODEL", link: 1 },
-				{ name: "positive", type: "CONDITIONING", link: 4 },
-				{ name: "negative", type: "CONDITIONING", link: 6 },
-				{ name: "latent_image", type: "LATENT", link: 2 },
-			],
-			outputs: [{ name: "LATENT", type: "LATENT", links: [7], slot_index: 0 }],
-			properties: {},
-			widgets_values: [156680208700286, true, 20, 8, "euler", "normal", 1],
-		},
-		{
-			id: 8,
-			type: "VAEDecode",
-			pos: [1209, 188],
-			size: { 0: 210, 1: 46 },
-			flags: {},
-			order: 5,
-			mode: 0,
-			inputs: [
-				{ name: "samples", type: "LATENT", link: 7 },
-				{ name: "vae", type: "VAE", link: 8 },
-			],
-			outputs: [{ name: "IMAGE", type: "IMAGE", links: [9], slot_index: 0 }],
-			properties: {},
-		},
-		{
-			id: 9,
-			type: "SaveImage",
-			pos: [1451, 189],
-			size: { 0: 210, 1: 26 },
-			flags: {},
-			order: 6,
-			mode: 0,
-			inputs: [{ name: "images", type: "IMAGE", link: 9 }],
-			properties: {},
-		},
-		{
-			id: 4,
-			type: "CheckpointLoaderSimple",
-			pos: [26, 474],
-			size: { 0: 315, 1: 98 },
-			flags: {},
-			order: 0,
-			mode: 0,
-			outputs: [
-				{ name: "MODEL", type: "MODEL", links: [1], slot_index: 0 },
-				{ name: "CLIP", type: "CLIP", links: [3, 5], slot_index: 1 },
-				{ name: "VAE", type: "VAE", links: [8], slot_index: 2 },
-			],
-			properties: {},
-			widgets_values: ["v1-5-pruned-emaonly.ckpt"],
-		},
+	  {
+		id: 3,
+		type: "LoadAudio",
+		pos: [401, 143],
+		size: { 0: 322, 1: 165 },
+		flags: {},
+		order: 0,
+		mode: 0,
+		outputs: [
+		  { name: "AUDIO", type: "AUDIO", links: [2], shape: 3, label: "音频", slot_index: 0 }
+		],
+		title: "上传说话者音频",
+		properties: { "Node name for S&R": "LoadAudio" },
+		widgets_values: [null, null, ""]
+	  },
+	  {
+		id: 4,
+		type: "Echo_LoadModel",
+		pos: [1216, 157],
+		size: { 0: 315, 1: 218 },
+		flags: {},
+		order: 1,
+		mode: 0,
+		outputs: [
+		  { name: "model", type: "MODEL", links: [3], shape: 3, label: "模型", slot_index: 0 },
+		  { name: "face_detector", type: "MODEL", links: [4], shape: 3, label: "脸部检测器", slot_index: 1 },
+		  { name: "visualizer", type: "MODEL", links: [5], shape: 3, label: "显形器", slot_index: 2 }
+		],
+		title: "EchoMimic-加载模型",
+		properties: { "Node name for S&R": "Echo_LoadModel" },
+		widgets_values: ["stabilityai/sd-vae-ft-mse", true, "audio_drived", false, false, false]
+	  },
+	  {
+		id: 5,
+		type: "Echo_Sampler",
+		pos: [802, 144],
+		size: { 0: 315, 1: 522 },
+		flags: {},
+		order: 4,
+		mode: 0,
+		inputs: [
+		  { name: "image", type: "IMAGE", link: 1, label: "图片" },
+		  { name: "audio", type: "AUDIO", link: 2, label: "音频" },
+		  { name: "pipe", type: "MODEL", link: 3, label: "管道" },
+		  { name: "face_detector", type: "MODEL", link: 4, label: "脸部检测器" },
+		  { name: "visualizer", type: "MODEL", link: 5, label: "显形器" }
+		],
+		outputs: [
+		  { name: "image", type: "IMAGE", links: [6], shape: 3, label: "图片", slot_index: 0 },
+		  { name: "audio", type: "AUDIO", links: [7], shape: 3, label: "音频", slot_index: 1 },
+		  { name: "frame_rate", type: "FLOAT", links: null, shape: 3, label: "视频帧率" }
+		],
+		title: "EchoMimic-采样器",
+		properties: { "Node name for S&R": "Echo_Sampler" },
+		widgets_values: ["none", "none", 0, 2.5, 30, 24, 16000, 0.1, 0.5, 12, 3, true, 120, 512, 512, false, false]
+	  },
+	  {
+		id: 2,
+		type: "LoadImage",
+		pos: [151, 138],
+		size: [215, 314],
+		flags: {},
+		order: 2,
+		mode: 0,
+		outputs: [
+		  { name: "IMAGE", type: "IMAGE", links: [1], shape: 3, label: "图片", slot_index: 0 },
+		  { name: "MASK", type: "MASK", links: null, shape: 3, label: "遮罩" }
+		],
+		title: "上传说话者图片",
+		properties: { "Node name for S&R": "LoadImage" },
+		widgets_values: ["201142.webp", "image"]
+	  },
+	  {
+		id: 7,
+		type: "ProgressMessage",
+		pos: [802, 787],
+		size: [855.9100000000001, 228.41999999999996],
+		flags: {},
+		order: 3,
+		mode: 0,
+		title: "流程信息节点",
+		properties: { text: "" },
+		color: "#232",
+		bgcolor: "#353"
+	  },
+	  {
+		id: 6,
+		type: "VHS_VideoCombine",
+		pos: [142, 571],
+		size: [579.37, 238],
+		flags: {},
+		order: 5,
+		mode: 0,
+		inputs: [
+		  { name: "images", type: "IMAGE", link: 6, label: "图片" },
+		  { name: "audio", type: "AUDIO", link: 7, label: "音频" },
+		  { name: "meta_batch", type: "VHS_BatchManager", link: null, label: "元堆" },
+		  { name: "vae", type: "VAE", link: null, label: "vae模型" }
+		],
+		outputs: [
+		  { name: "Filenames", type: "VHS_FILENAMES", links: null, shape: 3, label: "文件名" }
+		],
+		title: "VHS-视频合成",
+		properties: { "Node name for S&R": "VHS_VideoCombine" },
+		widgets_values: {
+		  frame_rate: 8,
+		  loop_count: 0,
+		  filename_prefix: "AnimateDiff",
+		  format: "image/gif",
+		  pingpong: false,
+		  save_output: true,
+		  videopreview: { hidden: false, paused: false, params: {}, muted: false }
+		}
+	  }
 	],
 	links: [
-		[1, 4, 0, 3, 0, "MODEL"],
-		[2, 5, 0, 3, 3, "LATENT"],
-		[3, 4, 1, 6, 0, "CLIP"],
-		[4, 6, 0, 3, 1, "CONDITIONING"],
-		[5, 4, 1, 7, 0, "CLIP"],
-		[6, 7, 0, 3, 2, "CONDITIONING"],
-		[7, 3, 0, 8, 0, "LATENT"],
-		[8, 4, 2, 8, 1, "VAE"],
-		[9, 8, 0, 9, 0, "IMAGE"],
+	  [1, 2, 0, 5, 0, "IMAGE"], [2, 3, 0, 5, 1, "AUDIO"], [3, 4, 0, 5, 2, "MODEL"],
+	  [4, 4, 1, 5, 3, "MODEL"], [5, 4, 2, 5, 4, "MODEL"], [6, 5, 0, 6, 0, "IMAGE"], [7, 5, 1, 6, 1, "AUDIO"]
 	],
-	groups: [],
+	groups: [
+	  { title: "软件工作区", bounding: [107, 10, 1626, 1100], color: "#8A8", font_size: 24 },
+	  { title: "流程信息区", bounding: [771, 707, 914, 388], color: "#b06634", font_size: 24 },
+	  { title: "输入区", bounding: [124, 59, 634, 414], color: "#b06634", font_size: 24 },
+	  { title: "输出区", bounding: [122, 485, 628, 616], color: "#b06634", font_size: 24 },
+	  { title: "工作区", bounding: [770, 63, 923, 624], color: "#b06634", font_size: 24 }
+	],
 	config: {},
-	extra: {},
-	version: 0.4,
-};
+	extra: { ds: { scale: 0.8264462809917354, offset: [112.32000000000009, 8.240000000000087] } },
+	version: 0.4
+  };
+  

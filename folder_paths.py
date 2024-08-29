@@ -37,9 +37,9 @@ folder_names_and_paths["photomaker"] = ([os.path.join(models_dir, "photomaker")]
 
 folder_names_and_paths["classifiers"] = ([os.path.join(models_dir, "classifiers")], {""})
 
-output_directory = os.path.join(os.path.dirname(os.path.realpath(__file__)), "output")
+output_directory = os.path.join(os.path.dirname(os.path.realpath(__file__)), "输出文件夹")
 temp_directory = os.path.join(os.path.dirname(os.path.realpath(__file__)), "temp")
-input_directory = os.path.join(os.path.dirname(os.path.realpath(__file__)), "input")
+input_directory = os.path.join(os.path.dirname(os.path.realpath(__file__)), "输入文件夹")
 user_directory = os.path.join(os.path.dirname(os.path.realpath(__file__)), "user")
 
 filename_list_cache: dict[str, tuple[list[str], dict[str, float], float]] = {}

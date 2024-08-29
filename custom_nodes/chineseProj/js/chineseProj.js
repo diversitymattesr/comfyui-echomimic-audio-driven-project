@@ -508,6 +508,9 @@ app.registerExtension({
                 }
                 progressMessageNode = this
             }
+            get dispLines() {
+                return this.widgets[this.widgets.findIndex( widget => widget.name === "lines")].value
+            }
         }
 
         LiteGraph.registerNodeType(
@@ -519,13 +522,13 @@ app.registerExtension({
             if(progressMessageNode) {
                 let message = event.detail
                 if(message.title === progressMessageNode.messages.title) {
-                    let dispLines = progressMessageNode.widgets[progressMessageNode.widgets.findIndex( widget => widget.name === "lines")]
+                    let dispLines = progressMessageNode.dispLines
                     if(dispLines <= progressMessageNode.messages.contents.length) {
                         progressMessageNode.messages.contents.shift()
                     }
                 } else {
                     progressMessageNode.messages.title = message.title
-                    progressMessageNode.messages.contents.length = 0
+                    progressMessageNode.messages.contents = []
                 }
                 progressMessageNode.messages.contents.push(message.message)
                 let titleWidget = progressMessageNode.widgets[progressMessageNode.widgets.findIndex( widget => widget.name === "title")]

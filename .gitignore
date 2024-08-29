@@ -5,8 +5,8 @@ __pycache__/
 !/输入文件夹/example.png
 /models/
 /temp/
-/custom_nodes/
-!custom_nodes/chineseProj/
+/custom_nodes/*
+!/custom_nodes/chineseProj/
 !custom_nodes/example_node.py.example
 extra_model_paths.yaml
 /.vs

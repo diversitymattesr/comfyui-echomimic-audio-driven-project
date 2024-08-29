@@ -508,9 +508,6 @@ app.registerExtension({
                 }
                 progressMessageNode = this
             }
-            get dispLines() {
-                return this.widgets[this.widgets.findIndex( widget => widget.name === "lines")].value
-            }
         }
 
         LiteGraph.registerNodeType(
@@ -522,7 +519,7 @@ app.registerExtension({
             if(progressMessageNode) {
                 let message = event.detail
                 if(message.title === progressMessageNode.messages.title) {
-                    let dispLines = progressMessageNode.dispLines
+                    let dispLines = progressMessageNode.widgets[progressMessageNode.widgets.findIndex( widget => widget.name === "lines")].value
                     if(dispLines <= progressMessageNode.messages.contents.length) {
                         progressMessageNode.messages.contents.shift()
                     }
@@ -539,7 +536,7 @@ app.registerExtension({
         }
         api.addEventListener("progressMessage", progressMessageHandler)
 
-        function executionStartHander(event) {
+        function executionStartHandler(event) {
             if(progressMessageNode) {
                 let dispLines = progressMessageNode.widgets[progressMessageNode.widgets.findIndex( widget => widget.name === "lines")].value
                 progressMessageNode.size[0] = progressMessageNodeWidth || 300
@@ -554,31 +551,34 @@ app.registerExtension({
             })
             progressMessageHandler(newEvent)
         }
-        api.addEventListener("execution_start", executionStartHander)
+        api.addEventListener("execution_start", executionStartHandler)
 
         function executingHandler(event) {
-            let executingNodeId = event.detail
-            let nodeTitle = app.graph._nodes_by_id[executingNodeId]?.title || "进入下一节点"
-            let newEvent = new CustomEvent("execution_start", {
-                detail: {
-                    title: nodeTitle,
-                    message: `正在执行节点${nodeTitle}中...` 
-                }
-            })
-            progressMessageHandler(newEvent)
+            if(event.detail) {
+                let executingNodeId = event.detail
+                let nodeTitle = app.graph._nodes_by_id[executingNodeId]?.title || "进入下一节点"
+                let newEvent = new CustomEvent("execution_start", {
+                    detail: {
+                        title: nodeTitle,
+                        message: `正在执行节点${nodeTitle}中...` 
+                    }
+                })
+                progressMessageHandler(newEvent)
+            }
         }
         api.addEventListener("executing", executingHandler)
 
         function executedHandler(event) {
-            let newEvent = new Event("execution_start", {
+            let vid = event.detail.output.gifs[0]
+            let newEvent = new CustomEvent("executed", {
                 detail: {
                     title: "此次工作流结束运行",
-                    message: `结果：${event.output}` 
+                    message: `====结果====\n文件名：${vid.filename}\n编码格式：${vid.format}\n帧数：${vid.frame_rate}` 
                 }
             })
             progressMessageHandler(newEvent)
         }
-        api.addEventListener("executed", executingHandler)
+        api.addEventListener("executed", executedHandler)
     }
 })
 
